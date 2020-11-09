@@ -1,13 +1,15 @@
-let jogadores = {
-  1: {
-    nome: '',
-    pontos: 0,
+let players = [
+  {
+    id: 1,
+    name: '',
+    points: 0,
   },
-  2: {
-    nome: '',
-    pontos: 0,
+  {
+    id: 2,
+    name: '',
+    points: 0,
   },
-}
+]
 
 function mostrarVezJogador(mostrar = true) {
   if (mostrar) {
@@ -18,81 +20,73 @@ function mostrarVezJogador(mostrar = true) {
 }
 
 function trocarJogadores() {
-  document.getElementById('trocar-jogadores').classList.toggle('d-none')
-  document.getElementById('nomeJogadores').classList.remove('d-none')
+  document.getElementById('change-players').classList.toggle('d-none')
+  document.getElementById('playersName').classList.remove('d-none')
   mostrarVezJogador(false)
   limparCasas()
 }
 
-function iniciarJogo() {
-  const elementJogador1 = document.querySelector("#nomeJogadores input#jogador-1");
-  const elementJogador2 = document.querySelector("#nomeJogadores input#jogador-2");
+function startGame() {
+  const elementJogador1 = document.querySelector("#playersName input#jogador-1");
+  const elementJogador2 = document.querySelector("#playersName input#jogador-2");
 
-  const jogador1 = elementJogador1.value
-  const jogador2 = elementJogador2.value
+  const player1 = elementJogador1.value
+  const player2 = elementJogador2.value
 
-  if (!jogador1 || !jogador2) {
-    alert('Insira os nomes do jogadores para iniciar')
+  if (!player1 && !player2) {
+    alert('Insira os nomes do jogadores para começar o jogo!')
     return
   }
 
-  jogadores = {
-    1: {
-      nome: jogador1,
-      pontos: 0,
-    },
-    2: {
-      nome: jogador2,
-      pontos: 0,
-    },
-  }
+  players[0] = { name: player1 }
+  players[1] = { name: player2 }
 
-  document.getElementById('nomeJogadores').classList.toggle('d-none')
-  document.getElementById('trocar-jogadores').classList.remove('d-none')
+  document.getElementById('playersName').classList.toggle('d-none')
+  document.getElementById('change-players').classList.remove('d-none')
   mostrarVezJogador(true)
   atualizarPlacar()
 }
 
-function limparCasas() {
-  document.querySelectorAll('.linha').forEach(linha => {
-    linha.querySelectorAll('.casa').forEach(casa => {
-      casa.style.backgroundImage = ''
+function clearBoxes() {
+  document.querySelectorAll('.row').forEach(row => {
+    row.querySelectorAll('.box').forEach(box => {
+      box.style.backgroundImage = ''
     })
   })
 }
 
-function reiniciarJogo() {
-  limparCasas()
+function restartGame() {
+  clearBoxes()
   document.getElementById("restartGame").classList.toggle('d-none')
 }
 
 function atualizarPlacar() {
-  const table = document.querySelector('table.placar')
+  const table = document.querySelector('table.score')
 
-  table.querySelectorAll('tr').forEach(linha => {
-    const id = linha.id
+  table.querySelectorAll('tr').forEach(row => {
+    const id = row.id
 
     if (!id) {
       return
     }
 
-    linha.querySelector('td.nome').textContent = jogadores[id].nome
-    linha.querySelector('td.pontos').textContent = jogadores[id].pontos
+    row.querySelector('td.name').textContent = jogadores[id].name
+    row.querySelector('td.points').textContent = jogadores[id].points
   })
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  let vez = 1;
+  let turn = 1;
   let winner = "";
 
-  function casasIguais(a, b, c) {
-    let casaA = document.querySelector("#casa" + a);
-    let casaB = document.querySelector("#casa" + b);
-    let casaC = document.querySelector("#casa" + c);
+  function sameBoxes(a, b, c) {
+    let boxA = document.querySelector("#box" + a);
+    let boxB = document.querySelector("#box" + b);
+    let boxC = document.querySelector("#box" + c);
 
-    let bgA = casaA.style.backgroundImage;
-    let bgB = casaB.style.backgroundImage;
-    let bgC = casaC.style.backgroundImage;
+    let bgA = boxA.style.backgroundImage;
+    let bgB = boxB.style.backgroundImage;
+    let bgC = boxC.style.backgroundImage;
 
     if ((bgA == bgB) && (bgB == bgC) && (bgA != "none" && bgA != "")) {
       winner = bgA.indexOf("assets/1.png") >= 0 ? "1" : "2";
@@ -102,17 +96,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function verificarFimJogo() {
+  function checkEndGame() {
     if (
-      casasIguais(1, 2, 3) || casasIguais(4, 5, 6) || casasIguais(7, 8, 9) ||
-      casasIguais(1, 4, 7) || casasIguais(2, 5, 8) || casasIguais(3, 6, 9) ||
-      casasIguais(1, 5, 9) || casasIguais(3, 5, 7)
+      sameBoxes(1, 2, 3) || sameBoxes(4, 5, 6) || sameBoxes(7, 8, 9) ||
+      sameBoxes(1, 4, 7) || sameBoxes(2, 5, 8) || sameBoxes(3, 6, 9) ||
+      sameBoxes(1, 5, 9) || sameBoxes(3, 5, 7)
     ) {
-      jogadores[winner].pontos = jogadores[winner].pontos + 1
+      players[winner].points += 1
       document.getElementById("restartGame").classList.toggle('d-none');
-      document.getElementById("resultado").innerHTML = `🏆 ${jogadores[winner].nome} ganhou!`;
-      document.querySelectorAll('casa').forEach(casa => {
-        casa.removeEventListener('click');
+      document.getElementById("score").innerHTML = `🏆 ${players[winner].name} ganhou!`;
+      document.querySelectorAll('box').forEach(box => {
+        box.removeEventListener('click');
       })
       atualizarPlacar()
     }
@@ -121,24 +115,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentPlayerImg = document.getElementById('currentPlayerImg');
   currentPlayerImg.style.backgroundImage = "url(assets/1.png)";
 
-  document.querySelectorAll('.casa').forEach(casa => {
+  document.querySelectorAll('.box').forEach(box => {
     casa.addEventListener('click', () => {
-      const jogadoresProntos = !!jogadores[1].nome && !!jogadores[2].nome
+      const isPlayersReady = !!players[0].name && !!players[1].name
 
-      if (!jogadoresProntos) {
+      if (!isPlayersReady) {
         alert('Insira os nomes dos jogadores para iniciar!')
         return
       }
 
-      let bg = casa.style.backgroundImage;
+      let bg = box.style.backgroundImage;
       if (bg == "none" || bg == "") {
-        let fig = `url(assets/${vez.toString()}.png)`;
-        casa.style.backgroundImage = fig;
-        vez = (vez == 1 ? 2 : 1);
-        verificarFimJogo();
-        currentPlayerImg.style.backgroundImage = `url(assets/${vez.toString()}.png)`;
-        let currentPlayerName = document.getElementById('nomeJogadorAtual')
-        currentPlayerName.innerText = ` - ${jogadores[vez].nome}`
+        let fig = `url(assets/${turn.toString()}.png)`;
+        box.style.backgroundImage = fig;
+        turn = (turn == 1 ? 2 : 1);
+        checkEndGame();
+        currentPlayerImg.style.backgroundImage = `url(assets/${turn.toString()}.png)`;
+        let currentPlayerName = document.getElementById('currentPlayersName')
+        currentPlayerName.innerText = ` - ${players[turn].nome}`
       }
     })
   })

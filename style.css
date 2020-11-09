@@ -2,19 +2,20 @@
 * {
   margin: 0;
   padding: 0;
+  outline: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   height: 100vh;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  background-color: black;
+
   color: white;
   font-family: 'Raleway';
+  background-color: black;
 }
 
 /* Css separado para nao colocar o font-size para todo o body */
@@ -22,85 +23,80 @@ body {
   font-size: 2.5rem;
 }
 
-#nomeJogadores {
+.players-name {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   margin: 1rem auto;
 }
 
-#nomeJogadores > div {
+.players-name > div {
   margin: 0 0 0.75rem;
   display: block;
   width: 100%;
 }
 
-#nomeJogadores > div > label {
-  font-size: 0.875rem;
+.players-name > div > label {
+  font-size: 1.5rem;
 }
 
-#nomeJogadores input {
-  border-radius: 10px;
-  padding: 0.5rem 0.5rem;
+.players-name > div > input {
   width: 100%;
-  max-width: 18rem;
-  margin-top: 0.25rem;
+  color: white;
   font-size: 1rem;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 2px solid white;
 }
 
-button.btn-primary {
+.players-name > .btn-primary {
+  margin-top: 2rem;
+}
+
+.btn-primary {
   width: 100%;
-  max-width: 14rem;
-  padding: .75rem 2rem;
-  font-size: 1rem;
   color: #FFF;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: .75rem 2rem;
   border: solid 2px #FFF;
   background-color: transparent;
-  cursor: pointer;
-  transition: 0.4s;
-  margin: 1.25rem auto 0;
 }
 
-button.btn-primary:hover {
-  background-color: #FFF;
+.btn-primary:hover {
   color: #222;
+  background-color: #FFF;
 }
 
-#nomeJogadores > button {
-  margin-top: 0.5rem;
-}
-
-#jogo {
+.tic-tac-toe {
   --borderWidth: 3px;
   position: relative;
   border-radius: 3px;
 }
 
-#jogo::after {
+.tic-tac-toe::after {
+  z-index: -1;
   content: '';
   position: absolute;
+  background-size: 300% 300%;
   top: calc(-1 * var(--borderWidth));
   left: calc(-1 * var(--borderWidth));
-  height: calc(100% + var(--borderWidth) * 2);
   width: calc(100% + var(--borderWidth) * 2);
+  height: calc(100% + var(--borderWidth) * 2);
   background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
   border-radius: calc(2 * var(--borderWidth));
-  z-index: -1;
   animation: animatedGradient 3s ease alternate infinite;
-  background-size: 300% 300%;
 }
 
-.linha {
+.row {
   height: 150px;
   display: flex;
-  border-bottom: 2px dashed;
 }
 
-.linha:last-child {
-  border-bottom: none;
-}
-
-.casa {
+.box {
   width: 150px;
   cursor: pointer;
   position: relative;
@@ -109,18 +105,22 @@ button.btn-primary:hover {
   background-repeat: no-repeat;
   background-position: center;
   border-right: 2px dashed whitesmoke;
+  border-bottom: 2px dashed whitesmoke;
 }
 
-.casa:last-child {
+.box:last-child {
   border-right: none;
 }
+.row:last-child .box {
+  border-bottom: none;
+}
 
-#resultado {
+#score {
   top: 64px;
   position: absolute;
 }
 
-.currentPlayer {
+.current-player {
   display: flex;
   align-items: center;
 }
@@ -167,7 +167,7 @@ table, tr, td {
   border: solid 1px;
 }
 
-table.placar {
+table.score {
   width: 100%;
   max-width: 24rem;
   margin: 1rem auto 2rem;
